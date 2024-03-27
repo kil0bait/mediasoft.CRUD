@@ -1,4 +1,4 @@
-package com.rasul.crud.CRUD;
+package org.example.warehousemanager;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

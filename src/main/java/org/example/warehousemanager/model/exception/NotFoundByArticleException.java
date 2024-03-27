@@ -1,4 +1,4 @@
-package com.rasul.crud.CRUD.handler.exceptions;
+package org.example.warehousemanager.model.exception;
 
 public class NotFoundByArticleException extends Throwable{
 }

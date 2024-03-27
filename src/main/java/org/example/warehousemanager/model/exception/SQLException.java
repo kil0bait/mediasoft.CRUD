@@ -1,4 +1,4 @@
-package com.rasul.crud.CRUD.handler.exceptions;
+package org.example.warehousemanager.model.exception;
 
 public class SQLException extends Throwable{
     SQLException(String message){

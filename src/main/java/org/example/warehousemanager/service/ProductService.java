@@ -1,11 +1,11 @@
-package com.rasul.crud.CRUD.service;
+package org.example.warehousemanager.service;
 
-import com.rasul.crud.CRUD.dao.ProductRepository;
-import com.rasul.crud.CRUD.entity.Product;
-import com.rasul.crud.CRUD.handler.exceptions.EmptyProductStorageException;
-import com.rasul.crud.CRUD.handler.exceptions.NotFoundByArticleException;
-import com.rasul.crud.CRUD.handler.exceptions.NotFoundByIdException;
-import org.springframework.beans.BeanUtils;
+import lombok.RequiredArgsConstructor;
+import org.example.warehousemanager.dao.ProductRepository;
+import org.example.warehousemanager.model.Product;
+import org.example.warehousemanager.model.exception.EmptyProductStorageException;
+import org.example.warehousemanager.model.exception.NotFoundByArticleException;
+import org.example.warehousemanager.model.exception.NotFoundByIdException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,57 +16,51 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class ProductServiceImpl implements ProductService{
+@RequiredArgsConstructor
+public class ProductService {
+    private final ProductRepository productRepository;
 
-    @Autowired
-    private ProductRepository productRepository;
-    @Override
     public List<Product> getAllProducts() throws EmptyProductStorageException {
         List<Product> allProducts = productRepository.findAll();
-        if (allProducts.isEmpty()){
-            throw new EmptyProductStorageException();
-        }
+//        if (allProducts.isEmpty()) {
+//            throw new EmptyProductStorageException();
+//        }
         return allProducts;
     }
+//
+//    @Override
+//    public void deleteAll() throws EmptyProductStorageException {
+//        if (productRepository.count() == 0) {
+//            throw new EmptyProductStorageException();
+//        }
+//        productRepository.deleteAll();
+//    }
 
-    @Override
-    public void deleteAll() throws EmptyProductStorageException {
-        if (productRepository.count() == 0) {
-            throw new EmptyProductStorageException();
-        }
-        productRepository.deleteAll();
-    }
-
-    @Override
     public void saveProduct(Product product) throws SQLException {
-        try{
+        try {
             productRepository.save(product);
-        }catch(Exception ex){
+        } catch (Exception ex) {
             throw new SQLException(ex.getMessage());
         }
     }
 
-    @Override
     public Product getProductById(UUID uuid) throws NotFoundByIdException {
         Optional<Product> optional = productRepository.findById(uuid);
-        if(optional.isEmpty()){
-            throw new NotFoundByIdException();
-        }
-        return optional.get();
+//        if (optional.isEmpty()) {
+//            throw new NotFoundByIdException();
+//        }
+        return optional.orElseThrow(NotFoundByIdException::new);
     }
 
-    @Override
     public Product updateProductById(Product updatedProduct, UUID uuid) throws SQLException, NotFoundByIdException {
-        if (!productRepository.existsById(uuid)) {
-            throw new NotFoundByIdException();
-        }
-        Product existingProduct = productRepository.getProductById(uuid);
+//        if (!productRepository.existsById(uuid)) {
+//            throw new NotFoundByIdException();
+//        }
+        Product existingProduct = productRepository.findById(uuid)
+                .orElseThrow(NotFoundByIdException::new);
 
-        if (Objects.nonNull(updatedProduct.getName())
-                && !"".equalsIgnoreCase(
-                updatedProduct.getName())) {
-            existingProduct.setName(
-                    updatedProduct.getName());
+        if (Objects.nonNull(updatedProduct.getName()) && updatedProduct.getName().isEmpty()) {
+            existingProduct.setName(updatedProduct.getName());
         }
         if (Objects.nonNull(updatedProduct.getArticle()) && !updatedProduct.getArticle().isEmpty()) {
             existingProduct.setArticle(updatedProduct.getArticle());
@@ -95,26 +89,26 @@ public class ProductServiceImpl implements ProductService{
         try {
             productRepository.save(existingProduct);
             return existingProduct;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new SQLException(e.getMessage());
         }
     }
 
-    @Override
+//    @Override
     public void deleteProductById(UUID uuid) throws NotFoundByIdException {
-        if (!productRepository.existsById(uuid)) {
-            throw new NotFoundByIdException();
-        }
-        productRepository.deleteById(uuid);
+//        if (!productRepository.existsById(uuid)) {
+//            throw new NotFoundByIdException();
+//        }
+        Product product = productRepository.findById(uuid).orElseThrow(NotFoundByIdException::new);
+        productRepository.delete(product);
     }
 
-    @Override
+//    @Override
     public Product getProductByArticle(String article) throws NotFoundByArticleException {
-        if(!productRepository.existsByArticle(article)){
+        if (!productRepository.existsByArticle(article)) {
             throw new NotFoundByArticleException();
         }
-        return productRepository.getProductByArticle(article);
+        return productRepository.getProductByArticle(article).i;
     }
 
     public Product updateProductByArticle(Product updatedProduct, String article) throws SQLException, NotFoundByArticleException {
@@ -154,8 +148,7 @@ public class ProductServiceImpl implements ProductService{
         try {
             productRepository.save(existingProduct);
             return existingProduct;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new SQLException(e.getMessage());
         }
     }

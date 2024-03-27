@@ -1,4 +1,4 @@
-package com.rasul.crud.CRUD.handler;
+package org.example.warehousemanager.model.dto;
 
 
 import lombok.AllArgsConstructor;
@@ -8,6 +8,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Response {
+public class ErrorResponse {
     private String message;
 }

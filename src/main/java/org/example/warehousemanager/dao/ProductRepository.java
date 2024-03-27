@@ -1,17 +1,17 @@
-package com.rasul.crud.CRUD.dao;
+package org.example.warehousemanager.dao;
 
-import com.rasul.crud.CRUD.entity.Product;
+import org.example.warehousemanager.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface ProductRepository extends JpaRepository<Product, UUID> {
-    Product getProductByArticle(String article);
+    Optional<Product> getProductByArticle(String article);
 
     boolean existsById(UUID id);
 
-    boolean existsByArticle(String Article);
+//    boolean existsByArticle(String article);
 
     Product getProductById(UUID id);
 
